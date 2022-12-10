@@ -1,0 +1,13 @@
+.Link{
+  text-decoration: none;
+  color: #fff;
+}
+
+.Link:hover{
+  color: #000;
+}
+
+.LinkSelected{
+  color: #000;
+  text-decoration: none;
+}

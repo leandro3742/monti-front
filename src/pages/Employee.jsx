@@ -5,13 +5,16 @@ const Employee = () => {
   const [price, setPrice] = useState()
   
   const sendData = async(type)=>{
-    let hour = new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds()
+    let day = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
+    let minutes;
+    new Date().getMinutes() < 10 ? minutes = '0' + new Date().getMinutes() : minutes = new Date().getMinutes()
+    let hour = new Date().getHours() + ':' + minutes
     let resp = await fetch("http://localhost:3000/transaction/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({hour: hour, type: type, value: price}),
+      body: JSON.stringify({hour: hour, type: type.toUpperCase(), value: price, day: day}),
     })
     if(resp.status === 201){
       setPrice()
@@ -28,7 +31,7 @@ const Employee = () => {
     <h3 className="text-center">Agregar ventas - pagos</h3>
     <div className="mt-3">
       <div className="d-flex justify-content-center">
-        <TextField size="small" label="Precio" variant="outlined" value={price ? price : ''} onChange={(e)=>setPrice(e.target.value)}/>
+        <TextField type="number" size="small" label="Precio" variant="outlined" value={price ? price : ''} onChange={(e)=>setPrice(e.target.value)}/>
       </div>
       <div className="d-flex justify-content-around mt-3">
         <button className="btn btn-danger btn-md" onClick={()=>sendData('pago')}>Pago</button>
