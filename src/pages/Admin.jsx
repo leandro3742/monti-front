@@ -42,7 +42,7 @@ const Admin = () => {
   }
 
   const getData = async() => {
-    let resp = await fetch(`${import.meta.env.VITE_URL_BACK}/transaction/get/${day}/${month+1}/${year}`)
+    let resp = await fetch(`${import.meta.env.VITE_BACKEND}/transaction/get/${day}/${month+1}/${year}`)
     if(resp.status === 200){
       resp = await resp.json()
       setData(resp)
