@@ -32,7 +32,9 @@ const Products = (props) => {
   }
 
   useEffect(() => {
-    getProducts()
+    if(!openCreateModal || !openUpdateModal){
+      getProducts()
+    }
   }, [openCreateModal, openUpdateModal]);
 
   const addFilter = () => {
@@ -46,7 +48,6 @@ const Products = (props) => {
 
   const deleteComponent = async (item) => {
     openSpinner()
-
     let response;
     await fetch(`${import.meta.env.VITE_BACKEND}/products/delete/${item.name}`, {
       method: 'DELETE',
