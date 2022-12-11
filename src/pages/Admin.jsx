@@ -56,7 +56,6 @@ const Admin = () => {
   useEffect(()=> {
     getTotal(data)
   }, [data])
-  console.log(months[month])
   return (
     <div className='row m-0'>
       <TextField

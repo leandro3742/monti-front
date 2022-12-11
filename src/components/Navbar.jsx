@@ -12,6 +12,7 @@ const Navbar = () => {
       <Toolbar className='d-flex justify-content-around'>
         <Link className={location.pathname === '/' ? 'LinkSelected' : 'Link' } to='/'>Empleado</Link>
         <Link className={location.pathname === '/admin' ? 'LinkSelected' : 'Link' } to='/admin'>Admin</Link>
+        <Link className={location.pathname === '/products' ? 'LinkSelected' : 'Link' } to='/products'>Productos</Link>
       </Toolbar>
     </AppBar>
   )
