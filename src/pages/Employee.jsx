@@ -9,7 +9,7 @@ const Employee = () => {
     let minutes;
     new Date().getMinutes() < 10 ? minutes = '0' + new Date().getMinutes() : minutes = new Date().getMinutes()
     let hour = new Date().getHours() + ':' + minutes
-    let resp = await fetch("http://localhost:3000/transaction/create", {
+    let resp = await fetch(`${import.meta.env.VITE_URL_BACK}/transaction/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
