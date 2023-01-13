@@ -10,9 +10,9 @@ const Navbar = () => {
   return (
     <AppBar position="static">
       <Toolbar className='d-flex justify-content-around'>
-        <Link className={location.pathname === '/' ? 'LinkSelected' : 'Link' } to='/'>Empleado</Link>
-        <Link className={location.pathname === '/admin' ? 'LinkSelected' : 'Link' } to='/admin'>Admin</Link>
-        <Link className={location.pathname === '/products' ? 'LinkSelected' : 'Link' } to='/products'>Productos</Link>
+        <Link className={location.pathname === '/' ? 'LinkSelected' : 'Link' } to='/la familia'>Empleado</Link>
+        <Link className={location.pathname === '/admin' ? 'LinkSelected' : 'Link' } to='/la familia/transactions'>Transacciones</Link>
+        <Link className={location.pathname === '/products' ? 'LinkSelected' : 'Link' } to='/la familia/products'>Productos</Link>
       </Toolbar>
     </AppBar>
   )

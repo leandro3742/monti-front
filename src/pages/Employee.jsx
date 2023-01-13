@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 
 const Employee = () => {
+  const { business } = useParams()
   const [price, setPrice] = useState()
   
   const sendData = async(type)=>{
@@ -14,7 +16,7 @@ const Employee = () => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({hour: hour, type: type.toUpperCase(), value: price, day: day}),
+      body: JSON.stringify({hour: hour, type: type.toUpperCase(), value: price, day: day, business: business}),
     })
     if(resp.status === 201){
       setPrice()

@@ -11,11 +11,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useParams } from 'react-router-dom';
 const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
 const Admin = () => {
+  const { business } = useParams()
   const [day, setDay] = React.useState('');
-  const [month, setMonth] = React.useState('')
+  const [month, setMonth] = React.useState(-1)
   const [year, setYear] = React.useState('')
   const [total, setTotal] = React.useState(0)
   const [data, setData] = React.useState([]);
@@ -42,10 +44,10 @@ const Admin = () => {
   }
 
   const getData = async() => {
-    let resp = await fetch(`${import.meta.env.VITE_BACKEND}/transaction/get/${day}/${month+1}/${year}`)
+    let resp = await fetch(`${import.meta.env.VITE_BACKEND}/business/getTransactions/${business}/${day}/${month+1}/${year}`)
     if(resp.status === 200){
       resp = await resp.json()
-      setData(resp)
+      setData(resp.transactions)
     }
   }
 
@@ -96,7 +98,7 @@ const Admin = () => {
       />
 
       <div className='d-flex justify-content-center'>
-        {day && month && year && 
+        {day && month !== -1 && year && 
           <button className='btn btn-md btn-primary' onClick={getData}>Ver transacciones</button>
         }
       </div>

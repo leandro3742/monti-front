@@ -4,7 +4,7 @@ import { TextField } from '@mui/material';
 import _ from 'lodash';
 
 const CreateModal = (props) => {
-  const { show, setShow, openSpinner, closeSpinner } = props;
+  const { show, setShow, openSpinner, closeSpinner, business } = props;
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [stock, setStock] = useState('');
@@ -18,8 +18,9 @@ const CreateModal = (props) => {
   const saveChanges = async () => {
     const newData = {
       name,
-      price,
-      stock
+      price: parseFloat(price),
+      stock: parseInt(stock),
+      business
     }
     let response;
     openSpinner()

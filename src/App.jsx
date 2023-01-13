@@ -20,9 +20,9 @@ function App() {
       <Navbar />
       <div>
         <Routes>
-          <Route path="/" exact element={<Employee openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
-          <Route path="/admin" exact element={<Admin openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
-          <Route path="/products" exact element={<Products openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
+          <Route path="/:business" exact element={<Employee openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
+          <Route path="/:business/transactions" exact element={<Admin openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
+          <Route path="/:business/products" exact element={<Products openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
         </Routes>
       </div>
     </BrowserRouter>

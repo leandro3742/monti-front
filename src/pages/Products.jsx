@@ -5,8 +5,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Pagination } from '@mui/material';
 import UpdateModal from '../components/UpdateModal';
 import CreateModal from '../components/CreateModal';
+import { useParams } from 'react-router-dom';
 
 const Products = (props) => {
+  const {business} = useParams()
   const {filters, label, openSpinner, closeSpinner } = props
   const [search, setSearch] = useState('');
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -17,7 +19,7 @@ const Products = (props) => {
 
   const filterProducts = async() => {
     openSpinner()
-    const response = await fetch(`${import.meta.env.VITE_BACKEND}/products/get/filter/${filter}`)
+    const response = await fetch(`${import.meta.env.VITE_BACKEND}/products/get/filter/${business}/${filter}`)
     const data = await response.json()
     closeSpinner()
     setProducts(data)
@@ -25,10 +27,10 @@ const Products = (props) => {
 
   const getProducts = async() => {
     openSpinner()
-    const response = await fetch(`${import.meta.env.VITE_BACKEND}/products/get`)
+    const response = await fetch(`${import.meta.env.VITE_BACKEND}/business/getProducts/${business}`)
     const data = await response.json()
     closeSpinner()
-    setProducts(data)
+    setProducts(data.products)
   }
 
   useEffect(() => {
@@ -110,8 +112,8 @@ const Products = (props) => {
           </div>
         )
       })}
-      <UpdateModal show={openUpdateModal} setShow={setOpenUpdateModal} data={selected} openSpinner={openSpinner} closeSpinner={closeSpinner} />
-      <CreateModal show={openCreateModal} setShow={setOpenCreateModal} openSpinner={openSpinner} closeSpinner={closeSpinner}/>
+      <UpdateModal business={business} show={openUpdateModal} setShow={setOpenUpdateModal} data={selected} openSpinner={openSpinner} closeSpinner={closeSpinner} />
+      <CreateModal business={business} show={openCreateModal} setShow={setOpenCreateModal} openSpinner={openSpinner} closeSpinner={closeSpinner}/>
       {/* <Pagination /> */}
     </div>
   )

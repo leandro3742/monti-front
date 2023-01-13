@@ -4,10 +4,10 @@ import { TextField } from '@mui/material';
 import _ from 'lodash';
 
 const UpdateModal = (props) => {
-  const { show, setShow, data, openSpinner, closeSpinner } = props;
+  const { business, show, setShow, data, openSpinner, closeSpinner } = props;
   const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [stock, setStock] = useState('');
+  const [price, setPrice] = useState(0);
+  const [stock, setStock] = useState(0);
 
   useEffect(() => {
     console.log(data)
@@ -19,14 +19,16 @@ const UpdateModal = (props) => {
   }, [data]);
 
   const saveChanges = async () => {
+    
     const newData = {
       name,
-      price,
-      stock
+      price: parseFloat(price),
+      stock: parseInt(stock),
+      business
     }
     let response;
     openSpinner()
-    await fetch(`${import.meta.env.VITE_BACKEND}/products/update/${data.name}`, {
+    await fetch(`${import.meta.env.VITE_BACKEND}/products/update/${business}/${data.name}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
