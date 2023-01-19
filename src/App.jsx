@@ -6,6 +6,8 @@ import Admin from "./pages/Admin";
 import Employee from "./pages/Employee";
 import Products from "./pages/Products";
 import Spinner from "./components/Spinner";
+import { SnackbarProvider } from 'notistack';
+import Sales from "./pages/Sales";
 
 function App() {
   const [show, setShow] = useState(false)
@@ -15,17 +17,27 @@ function App() {
 
   return (
     <div>
-    <BrowserRouter>
-      <Spinner show={show} />      
-      <Navbar />
-      <div>
-        <Routes>
-          <Route path="/:business" exact element={<Employee openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
-          <Route path="/:business/transactions" exact element={<Admin openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
-          <Route path="/:business/products" exact element={<Products openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
-        </Routes>
-      </div>
-    </BrowserRouter>
+      <SnackbarProvider 
+        maxSnack={3}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        autoHideDuration={3000}
+      >
+        <BrowserRouter>
+          <Spinner show={show} />      
+          <Navbar />
+          <div>
+            <Routes>
+              <Route path="/:business" exact element={<Employee openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
+              <Route path="/:business/sales" exact element={<Sales openSpinner={openSpinner} closeSpinner={closeSpinner} /> } />
+              <Route path="/:business/transactions" exact element={<Admin openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
+              <Route path="/:business/products" exact element={<Products openSpinner={openSpinner} closeSpinner={closeSpinner}/>} />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </SnackbarProvider>
     </div>
   )
 }

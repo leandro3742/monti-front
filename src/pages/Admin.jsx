@@ -14,11 +14,12 @@ import Paper from '@mui/material/Paper';
 import { useParams } from 'react-router-dom';
 const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-const Admin = () => {
+const Admin = (props) => {
+  const { openSpinner, closeSpinner } = props;
   const { business } = useParams()
-  const [day, setDay] = React.useState('');
-  const [month, setMonth] = React.useState(-1)
-  const [year, setYear] = React.useState('')
+  const [day, setDay] = React.useState(new Date().getDate());
+  const [month, setMonth] = React.useState(new Date().getMonth())
+  const [year, setYear] = React.useState(new Date().getFullYear())
   const [total, setTotal] = React.useState(0)
   const [data, setData] = React.useState([]);
   
@@ -44,7 +45,9 @@ const Admin = () => {
   }
 
   const getData = async() => {
+    openSpinner()
     let resp = await fetch(`${import.meta.env.VITE_BACKEND}/business/getTransactions/${business}/${day}/${month+1}/${year}`)
+    closeSpinner()
     if(resp.status === 200){
       resp = await resp.json()
       setData(resp.transactions)

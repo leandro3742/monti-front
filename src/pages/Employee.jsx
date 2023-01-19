@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
-
-const Employee = () => {
+import { useSnackbar } from 'notistack';
+const Employee = (props) => {
+  const { enqueueSnackbar } = useSnackbar();
   const { business } = useParams()
   const [price, setPrice] = useState()
-  
+  const { openSpinner, closeSpinner} = props
+
   const sendData = async(type)=>{
     let day = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
     let minutes;
     new Date().getMinutes() < 10 ? minutes = '0' + new Date().getMinutes() : minutes = new Date().getMinutes()
     let hour = new Date().getHours() + ':' + minutes
+    openSpinner()
     let resp = await fetch(`${import.meta.env.VITE_BACKEND}/transaction/create`, {
       method: "POST",
       headers: {
@@ -18,13 +21,14 @@ const Employee = () => {
       },
       body: JSON.stringify({hour: hour, type: type.toUpperCase(), value: price, day: day, business: business}),
     })
+    closeSpinner()
     if(resp.status === 201){
       setPrice()
-      alert("Se guardo la transaccion")
+      enqueueSnackbar('Se guardo la transaccion', { variant: 'success' });
     }
     else{
       setPrice()
-      alert("Hubo un error, vuelva a intentarlo")
+      enqueueSnackbar('Hubo un error, vuelva a intentarlo', { variant: 'error' });
     }
   }
 
