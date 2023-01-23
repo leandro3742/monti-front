@@ -10,6 +10,7 @@ const Navbar = () => {
   return (
     <AppBar position="static">
       <Toolbar className='d-flex justify-content-around'>
+        <Link className={location.pathname === '/sales' ? 'LinkSelected' : 'Link' } to='/mi familia/sales'>Ventas</Link>
         <Link className={location.pathname === '/' ? 'LinkSelected' : 'Link' } to='/mi familia'>Empleado</Link>
         <Link className={location.pathname === '/admin' ? 'LinkSelected' : 'Link' } to='/mi familia/transactions'>Transacciones</Link>
         <Link className={location.pathname === '/products' ? 'LinkSelected' : 'Link' } to='/mi familia/products'>Productos</Link>

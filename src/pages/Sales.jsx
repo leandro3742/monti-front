@@ -1,20 +1,24 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import '../styles/Sales.css'
+// Material UI
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
+import { apiCreateSales } from '../api/transactions';
+
+import { useSnackbar } from 'notistack';
 
 const Sales = (props) => {
+  const { enqueueSnackbar } = useSnackbar();
   const { business } = useParams()
   const { openSpinner, closeSpinner } = props
   const [products, setProducts] = React.useState([])
@@ -62,6 +66,7 @@ const Sales = (props) => {
     }
     closeSpinner()
   }
+
   React.useEffect(() => {
     getProducts()
   }, [])
@@ -70,74 +75,108 @@ const Sales = (props) => {
     filterProducts()
   }, [search])
   
-  return (
-    <div>
-      <h1 className='text-center'>Lista de productos</h1>
-      <form onSubmit={(e)=>e.preventDefault()} style={{border: '1px solid white', width:'300px', height: '40px' }} className='d-flex justify-content-center m-auto rounded border border-2 mb-2' >
-        <InputBase
-          placeholder={`Buscar Producto`}
-          inputProps={{ 'aria-label': 'Buscar cliente' }}
-          onChange={(e)=>setSearch(e.target.value)} 
-          value={search}
-        />
-        <IconButton type="submit" aria-label="search" >
-          <SearchIcon />
-        </IconButton>
-      </form>
-      <div style={{overflowY: "scroll", height: '40vh'}} className='border border-2 rounded'>
-        {showProducts.length === 0 && <p className='text-center'>No hay productos</p>}
+  const saveSale = async () => {
+    openSpinner()
+    let salesArr = []
+    listOfSales.forEach((elem) => {
+      if(elem.cant === 1) salesArr.push({name: elem.name, price: elem.price})
+      else if (elem.cant > 1) {
+        for(let i = 0; i < elem.cant; i++) {
+          salesArr.push({name: elem.name, price: elem.price})
+        }
+      }
+    })
+    const res = await apiCreateSales({sales: salesArr, business})
+    console.log(res)
+    if(res.status === 200) {
+      enqueueSnackbar('Venta realizada con éxito', {variant: 'success'})
+      setListOfSales([])
+    }
+    else enqueueSnackbar('Error al realizar la venta', {variant: 'error'})
+    closeSpinner()
+  }
 
-        {showProducts.map((item, index) => {
-          return (
-            <div className=' m-auto col-10 my-1 p-1' key={index}>
-              <div className=''>
-                  <div className='d-flex justify-content-between'>
-                    <span className='card-title'><b>{item.name}</b></span>
-                    <div>
-                      <Button variant='contained' size='small' onClick={()=>addItem(item)}>Agregar</Button>                  
+  return (
+    <div className='row m-0'>
+      <section className='col-12 col-lg-6 m-0'>
+        <div className='sales-title'>
+          <h1 className='text-center'>Lista de productos</h1>
+          <form onSubmit={(e)=>e.preventDefault()} style={{border: '1px solid white', width:'300px', height: '40px' }} className='d-flex justify-content-center m-auto rounded border border-2 mb-2' >
+            <InputBase
+              placeholder={`Buscar Producto`}
+              inputProps={{ 'aria-label': 'Buscar cliente' }}
+              onChange={(e)=>setSearch(e.target.value)} 
+              value={search}
+            />
+            <IconButton type="submit" aria-label="search" >
+              <SearchIcon />
+            </IconButton>
+          </form>
+        </div>
+        <section className='sales-list border border-2 rounded'>
+          {showProducts.length === 0 && <p className='text-center'>No hay productos</p>}
+
+          {showProducts.map((item, index) => {
+            return (
+              <div className='m-auto col-10 my-1 p-1' key={index}>
+                <div className=''>
+                    <div className='d-flex justify-content-between'>
+                      <span className='card-title'><b>{item.name}</b></span>
+                      <div>
+                        <Button variant='contained' size='small' onClick={()=>addItem(item)}>Agregar</Button>                  
+                      </div>
                     </div>
-                  </div>
-                  <p className='m-0'>Precio: {item.price}</p>
-                  {/* <p className='m-0'>Stock: {item.stock}</p> */}
+                    <p className='m-0'>Precio: ${item.price}</p>
+                </div>
+                <hr />
               </div>
-              <hr />
-            </div>
-          )
-        })}
-      </div>
-      
-        <TableContainer component={Paper}>
-      <Table aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Nombre</TableCell>
-            <TableCell align="center">Cantidad</TableCell>
-            <TableCell align="right">Precio</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {listOfSales.map((elem) => (
-            <TableRow
-              key={elem.name}
-            >
-              <TableCell component="th" scope="row">
-                {elem.name}
-              </TableCell>
-              <TableCell align="center" sx={{display: 'flex', justifyContent: 'center'}}>
-                  <RemoveIcon onClick={()=>removeItem(elem.name)}/>
-                    <p className='mx-2'>{elem.cant}</p>
-                    <AddIcon onClick={()=>addItem(elem)}/>
-              </TableCell>
-              <TableCell align="right">${elem.price * elem.cant}</TableCell>
+            )
+          })}
+        </section>
+      </section>
+
+      <section className='m-0 col-12 col-lg-6' >
+        <div className='sales-title'>
+          <h1 className='text-center'>Lista de compras</h1>    
+        </div>
+        <div className='sales-list'>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Nombre</TableCell>
+              <TableCell align="center">Cantidad</TableCell>
+              <TableCell align="right">Precio</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <div className='d-flex justify-content-end mx-2'>
-          {/* <span><b>Total:</b> ${total}</span> */}
-      </div>
-    </TableContainer>  
-    <p><b>$</b> {listOfSales.reduce((acc, elem) => acc + (elem.price * elem.cant), 0)}</p>
+          </TableHead>
+          <TableBody>
+            {listOfSales.map((elem) => (
+              <TableRow
+                key={elem.name}
+              >
+                <TableCell component="th" scope="row">
+                  {elem.name}
+                </TableCell>
+                <TableCell align="center" sx={{display: 'flex', justifyContent: 'center'}}>
+                    <RemoveIcon onClick={()=>removeItem(elem.name)}/>
+                      <p className='mx-2'>{elem.cant}</p>
+                      <AddIcon onClick={()=>addItem(elem)}/>
+                </TableCell>
+                <TableCell align="right">${elem.price * elem.cant}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        </div>
+        <section className='text-center my-2'>
+          <p className='my-2'>
+            <b>Total: $</b> 
+            {listOfSales.reduce((acc, elem) => acc + (elem.price * elem.cant), 0)}
+          </p>
+          <div className='d-flex justify-content-center'>
+            <Button variant='contained' color='success' size="small" onClick={saveSale}>Realizar venta</Button>
+          </div>
+        </section>
+      </section>
     </div>
   )
 }

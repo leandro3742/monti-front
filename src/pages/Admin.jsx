@@ -46,7 +46,9 @@ const Admin = (props) => {
 
   const getData = async() => {
     openSpinner()
-    let resp = await fetch(`${import.meta.env.VITE_BACKEND}/business/getTransactions/${business}/${day}/${month+1}/${year}`)
+    let auxMonth = month
+    if(month+1 < 10) auxMonth = '0'+(month+1)
+    let resp = await fetch(`${import.meta.env.VITE_BACKEND}/business/getTransactions/${business}/${day}/${auxMonth}/${year}`)
     closeSpinner()
     if(resp.status === 200){
       resp = await resp.json()
