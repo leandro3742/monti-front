@@ -16,7 +16,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { apiCreateSales } from '../api/transactions';
 
 import { useSnackbar } from 'notistack';
-
+import { DtoTransaction } from '../dto/DtoTransaction';
+import { createDate } from '../assets/index'; 
 const Sales = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { business } = useParams()
@@ -78,16 +79,16 @@ const Sales = (props) => {
   const saveSale = async () => {
     openSpinner()
     let salesArr = []
+    // Create an hour and date
+    let date = createDate()
     listOfSales.forEach((elem) => {
-      if(elem.cant === 1) salesArr.push({name: elem.name, price: elem.price})
-      else if (elem.cant > 1) {
-        for(let i = 0; i < elem.cant; i++) {
-          salesArr.push({name: elem.name, price: elem.price})
-        }
+      let transaction = new DtoTransaction(date.hour, date.day, elem.name, elem.price, 'Venta', business)      
+      for(let i = 0; i < elem.cant; i++) {
+        salesArr.push(transaction)
       }
     })
+
     const res = await apiCreateSales({sales: salesArr, business})
-    console.log(res)
     if(res.status === 200) {
       enqueueSnackbar('Venta realizada con éxito', {variant: 'success'})
       setListOfSales([])
@@ -134,12 +135,14 @@ const Sales = (props) => {
           })}
         </section>
       </section>
-
+      
+      {listOfSales.length > 0 &&
       <section className='m-0 col-12 col-lg-6' >
         <div className='sales-title'>
           <h1 className='text-center'>Lista de compras</h1>    
         </div>
         <div className='sales-list'>
+        {listOfSales.length === 0 && <p className='text-center'>No hay productos</p>}
         <Table>
           <TableHead>
             <TableRow>
@@ -166,6 +169,7 @@ const Sales = (props) => {
             ))}
           </TableBody>
         </Table>
+        
         </div>
         <section className='text-center my-2'>
           <p className='my-2'>
@@ -173,10 +177,11 @@ const Sales = (props) => {
             {listOfSales.reduce((acc, elem) => acc + (elem.price * elem.cant), 0)}
           </p>
           <div className='d-flex justify-content-center'>
-            <Button variant='contained' color='success' size="small" onClick={saveSale}>Realizar venta</Button>
+            {listOfSales.length > 0 && <Button variant='contained' color='success' size="small" onClick={saveSale}>Realizar venta</Button>}
           </div>
         </section>
       </section>
+        }
     </div>
   )
 }
