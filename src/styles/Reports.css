@@ -1,0 +1,4 @@
+.reports-table{
+  max-height: 60vh;
+  overflow: auto;
+}

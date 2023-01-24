@@ -1,6 +1,6 @@
 export class DtoTransaction{
   constructor(hour, day, productName, value, type, business){
-    this.productName = productName
+    this.product = productName
     this.hour = hour
     this.type = type
     this.value = value
