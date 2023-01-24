@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal';
 import { TextField } from '@mui/material';
 import _ from 'lodash';
-
+import Button from '@mui/material/Button';
+import { useSnackbar } from 'notistack';
 const CreateModal = (props) => {
+  const { enqueueSnackbar } = useSnackbar();
   const { show, setShow, openSpinner, closeSpinner, business } = props;
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -13,7 +15,7 @@ const CreateModal = (props) => {
     setName('');
     setPrice('');
     setStock('');
-  }, []);
+  }, [show]);
   
   const saveChanges = async () => {
     const newData = {
@@ -32,10 +34,10 @@ const CreateModal = (props) => {
       body: JSON.stringify(newData)
     }).then( async res => response = await res.json());
     if(response.statusCode > 300 ){
-      alert('Error al crear el producto')
+      enqueueSnackbar('Error al crear el producto', {variant: 'error'})
     }
     else{
-      alert('Producto creado correctamente')
+      enqueueSnackbar('Producto creado correctamente', {variant: 'success'})
     }
     closeSpinner()
     setShow(false);
@@ -46,7 +48,6 @@ const CreateModal = (props) => {
       <Modal.Title>Crear producto</Modal.Title>
     </Modal.Header>
     <Modal.Body>
-      
         <div className='d-flex flex-column align-items-center'>
           <TextField size='small' label='Nombre' value={name} onChange={(e)=>setName(e.target.value)}/>
           <TextField className='my-3' size='small' type='number' label='Precio' value={price} onChange={(e)=>setPrice(e.target.value)}/>
@@ -54,12 +55,13 @@ const CreateModal = (props) => {
         </div>
     </Modal.Body>
     <Modal.Footer>
-      <button onClick={()=>setShow(false)} className='btn btn-secondary btn-sm'>
+
+      <Button variant='contained' size='small' onClick={()=>setShow(false)} className='mx-3'>
         Cancelar
-      </button>
-      <button onClick={saveChanges} className='btn btn-success btn-sm'>
+      </Button>
+      <Button variant='contained' size='small' color='success' onClick={saveChanges}>
         Guardar cambios
-      </button>
+      </Button>
     </Modal.Footer>
   </Modal>
   )

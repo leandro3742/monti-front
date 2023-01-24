@@ -3,7 +3,7 @@
 }
 
 .sales-list{
-  max-height: 80vh;
+  max-height: 60vh;
   overflow-y: auto;
 }
 @media (max-width: 768px) {

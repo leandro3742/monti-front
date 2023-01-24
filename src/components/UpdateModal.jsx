@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal';
 import { TextField } from '@mui/material';
 import _ from 'lodash';
+import { useSnackbar } from 'notistack';
 
 const UpdateModal = (props) => {
+  const { enqueueSnackbar } = useSnackbar();
   const { business, show, setShow, data, openSpinner, closeSpinner } = props;
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
@@ -36,9 +38,9 @@ const UpdateModal = (props) => {
       body: JSON.stringify(newData)
     }).then(async res => response = await res.json());
     if(response.statusCode > 300 )
-      alert('Error al editar el producto')
+      enqueueSnackbar('Error al editar el producto', {variant: 'error'})
     else
-      alert('Producto editado correctamente')
+      enqueueSnackbar('Producto editado correctamente', {variant: 'success'})
     closeSpinner()
     setShow(false);
   }

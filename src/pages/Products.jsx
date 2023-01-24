@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom';
+import '../styles/Products.css'
+import { useSnackbar } from 'notistack';
+
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
-import { Pagination } from '@mui/material';
 import UpdateModal from '../components/UpdateModal';
 import CreateModal from '../components/CreateModal';
-import { useParams } from 'react-router-dom';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DriveFileRenameOutlineSharpIcon from '@mui/icons-material/DriveFileRenameOutlineSharp';
 
 const Products = (props) => {
+  const { enqueueSnackbar } = useSnackbar();
   const {business} = useParams()
   const {filters, label, openSpinner, closeSpinner } = props
   const [search, setSearch] = useState('');
@@ -30,7 +37,8 @@ const Products = (props) => {
     const response = await fetch(`${import.meta.env.VITE_BACKEND}/business/getProducts/${business}`)
     const data = await response.json()
     closeSpinner()
-    setProducts(data.products)
+    if(data.status !== 200) return enqueueSnackbar('Error al obtener los productos', {variant: 'error'})
+    else setProducts(data.data.products)
   }
 
   useEffect(() => {
@@ -58,9 +66,9 @@ const Products = (props) => {
       }
     }).then(async res => response = await res.json())
     if(response.statusCode > 300){
-      alert('Error al eliminar el producto')
+      enqueueSnackbar('Error al eliminar el producto', {variant: 'error'})
     }else{
-      alert('Producto eliminado correctamente')
+      enqueueSnackbar('Producto eliminado correctamente', {variant: 'success'})
     }
     closeSpinner()
     getProducts()
@@ -74,8 +82,8 @@ const Products = (props) => {
 
   return (
     <div>
-      <div className='d-flex justify-content-end my-2 mx-2'>
-        <button className='btn btn-sm btn-info shadow' onClick={()=>setOpenCreateModal(true)}>Crear nuevo producto</button>
+      <div className='products-create'>
+        <Button size='small' variant='contained' onClick={()=>setOpenCreateModal(true)}>Crear producto</Button>
       </div>
       <div className='col-10 m-auto mt-3'>
         <div className='text-center d-flex justify-content-around shadow rounded bg-white'>
@@ -95,23 +103,23 @@ const Products = (props) => {
         <h5 className='mt-5'>No se encotró ningún producto</h5>
       </div>
       }
-      {products.map((item, index) => {
-        return (
-          <div className='col-10 m-auto mt-3' key={index}>
-            <div className='card'>
-              <div className='card-body'>
-                <h5 className='card-title'>{item.name}</h5>
-                <p className='card-text'>Precio: {item.price}</p>
-                <p className='card-text'>Stock: {item.stock}</p>
+      <section className='row m-0 d-flex justify-content-around'>
+        {products.map((item, index) => {
+          return (
+            <div className='products-card p-0' key={item.name}>
+              <div className='products-card-text'>
+                <h3>{item.name}</h3>
+                <p><b>Precio: </b>${item.price}</p>
+                <p><b>Stock: </b>{item.stock}</p>
               </div>
-              <div className='d-flex justify-content-end p-3'>
-                <button className='btn btn-primary btn-sm mx-3' onClick={()=>editComponet(item)}>Editar</button>
-                <button className='btn btn-danger btn-sm' onClick={()=>deleteComponent(item)}>Eliminar</button>
+              <div className='products-card-buttons'>
+                <Button variant='contained' startIcon={<DeleteIcon size="small"/>} onClick={()=>deleteComponent(item)}>eliminar</Button>
+                <Button variant='contained' onClick={()=>editComponet(item)} startIcon={<DriveFileRenameOutlineSharpIcon />}>Editar</Button>
               </div>
             </div>
-          </div>
-        )
-      })}
+          )
+        })}
+      </section>
       <UpdateModal business={business} show={openUpdateModal} setShow={setOpenUpdateModal} data={selected} openSpinner={openSpinner} closeSpinner={closeSpinner} />
       <CreateModal business={business} show={openCreateModal} setShow={setOpenCreateModal} openSpinner={openSpinner} closeSpinner={closeSpinner}/>
       {/* <Pagination /> */}
