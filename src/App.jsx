@@ -9,6 +9,7 @@ import Products from "./pages/Products";
 import Spinner from "./components/Spinner";
 import { SnackbarProvider } from 'notistack';
 import Sales from "./pages/Sales";
+import ReadBarcode from "./pages/ReadBarcode";
 // Material UI
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -52,6 +53,7 @@ function App() {
               <Route path="/:business/sales" exact element={<Sales openSpinner={openSpinner} closeSpinner={closeSpinner} />} />
               <Route path="/:business/transactions" exact element={<Reports openSpinner={openSpinner} closeSpinner={closeSpinner} />} />
               <Route path="/:business/products" exact element={<Products openSpinner={openSpinner} closeSpinner={closeSpinner} />} />
+              <Route path="/qr" element={<ReadBarcode />} />
             </Routes>
           </div>
         </BrowserRouter>
