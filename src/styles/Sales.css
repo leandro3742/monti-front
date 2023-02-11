@@ -6,6 +6,11 @@
   max-height: 60vh;
   overflow-y: auto;
 }
+.sales-table-header>th {
+  background-color: #e63946;
+  color: white;
+  font-weight: bold;
+}
 @media (max-width: 768px) {
   .sales-title{
     margin-top: 10px;

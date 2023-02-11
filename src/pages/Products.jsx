@@ -15,8 +15,8 @@ import DriveFileRenameOutlineSharpIcon from '@mui/icons-material/DriveFileRename
 
 const Products = (props) => {
   const { enqueueSnackbar } = useSnackbar();
-  const {business} = useParams()
-  const {filters, label, openSpinner, closeSpinner } = props
+  const { business } = useParams()
+  const { filters, label, openSpinner, closeSpinner } = props
   const [search, setSearch] = useState('');
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -24,7 +24,7 @@ const Products = (props) => {
   const [selected, setSelected] = useState({})
   const [products, setProducts] = useState([])
 
-  const filterProducts = async() => {
+  const filterProducts = async () => {
     openSpinner()
     const response = await fetch(`${import.meta.env.VITE_BACKEND}/products/get/filter/${business}/${filter}`)
     const data = await response.json()
@@ -32,17 +32,17 @@ const Products = (props) => {
     setProducts(data)
   }
 
-  const getProducts = async() => {
+  const getProducts = async () => {
     openSpinner()
     const response = await fetch(`${import.meta.env.VITE_BACKEND}/business/getProducts/${business}`)
     const data = await response.json()
     closeSpinner()
-    if(data.status !== 200) return enqueueSnackbar('Error al obtener los productos', {variant: 'error'})
+    if (data.status !== 200) return enqueueSnackbar('Error al obtener los productos', { variant: 'error' })
     else setProducts(data.data.products)
   }
 
   useEffect(() => {
-    if(!openCreateModal || !openUpdateModal){
+    if (!openCreateModal || !openUpdateModal) {
       getProducts()
     }
   }, [openCreateModal, openUpdateModal]);
@@ -65,43 +65,45 @@ const Products = (props) => {
         'Content-Type': 'application/json'
       }
     }).then(async res => response = await res.json())
-    if(response.statusCode > 300){
-      enqueueSnackbar('Error al eliminar el producto', {variant: 'error'})
-    }else{
-      enqueueSnackbar('Producto eliminado correctamente', {variant: 'success'})
+    if (response.statusCode > 300) {
+      enqueueSnackbar('Error al eliminar el producto', { variant: 'error' })
+    } else {
+      enqueueSnackbar('Producto eliminado correctamente', { variant: 'success' })
     }
     closeSpinner()
     getProducts()
   }
 
   useEffect(() => {
-    if(filter){
+    if (filter) {
       filterProducts()
     }
   }, [filter]);
 
   return (
     <div>
-      <div className='products-create'>
-        <Button size='small' variant='contained' onClick={()=>setOpenCreateModal(true)}>Crear producto</Button>
-      </div>
-      <div className='col-10 m-auto mt-3'>
-        <div className='text-center d-flex justify-content-around shadow rounded bg-white'>
-          <InputBase
-            placeholder={`Buscar Producto`}
-            inputProps={{ 'aria-label': 'Buscar Producto' }}
-            onChange={(e)=>setSearch(e.target.value)} 
-            value={search}
-          />
-          <IconButton type="submit"  aria-label="search" onClick={addFilter}>
-            <SearchIcon />
-          </IconButton>
+      <section className='products-header'>
+        <div className='products-create'>
+          <Button size='small' variant='contained' onClick={() => setOpenCreateModal(true)}>Crear producto</Button>
         </div>
-      </div>
-      {products.length === 0 && 
-      <div className='col-10 m-auto mt-3 text-center'>
-        <h5 className='mt-5'>No se encotró ningún producto</h5>
-      </div>
+        <div className='col-lg-4 col-10 m-auto mt-3'>
+          <div className='text-center d-flex justify-content-around shadow rounded bg-white'>
+            <InputBase
+              placeholder={`Buscar Producto`}
+              inputProps={{ 'aria-label': 'Buscar Producto' }}
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+            />
+            <IconButton type="submit" aria-label="search" onClick={addFilter}>
+              <SearchIcon />
+            </IconButton>
+          </div>
+        </div>
+      </section>
+      {products.length === 0 &&
+        <div className='col-10 m-auto mt-3 text-center'>
+          <h5 className='mt-5'>No se encotró ningún producto</h5>
+        </div>
       }
       <section className='row m-0 d-flex justify-content-around'>
         {products.map((item, index) => {
@@ -113,16 +115,25 @@ const Products = (props) => {
                 <p><b>Stock: </b>{item.stock}</p>
               </div>
               <div className='products-card-buttons'>
-                <Button variant='contained' startIcon={<DeleteIcon size="small"/>} onClick={()=>deleteComponent(item)}>eliminar</Button>
-                <Button variant='contained' onClick={()=>editComponet(item)} startIcon={<DriveFileRenameOutlineSharpIcon />}>Editar</Button>
+                {window.screen.width > 768
+                  ?
+                  <Button variant='contained' startIcon={<DeleteIcon size="small" />} onClick={() => deleteComponent(item)}>eliminar</Button>
+                  :
+                  <Button variant='contained' onClick={() => deleteComponent(item)}><DeleteIcon size="small" /></Button>
+                }
+                {window.screen.width > 768
+                  ?
+                  <Button variant='contained' onClick={() => editComponet(item)} startIcon={<DriveFileRenameOutlineSharpIcon />}>Editar</Button>
+                  :
+                  <Button variant='contained' onClick={() => editComponet(item)}><DriveFileRenameOutlineSharpIcon /></Button>
+                }
               </div>
             </div>
           )
         })}
       </section>
       <UpdateModal business={business} show={openUpdateModal} setShow={setOpenUpdateModal} data={selected} openSpinner={openSpinner} closeSpinner={closeSpinner} />
-      <CreateModal business={business} show={openCreateModal} setShow={setOpenCreateModal} openSpinner={openSpinner} closeSpinner={closeSpinner}/>
-      {/* <Pagination /> */}
+      <CreateModal business={business} show={openCreateModal} setShow={setOpenCreateModal} openSpinner={openSpinner} closeSpinner={closeSpinner} />
     </div>
   )
 }

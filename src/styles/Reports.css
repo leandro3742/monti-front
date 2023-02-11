@@ -1,4 +1,89 @@
+.reports-app{
+  display: flex;
+}
+/* Form css */
+.reports-form{
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 75px;
+}
+.reports-form-button{
+  display: flex;
+  margin-top: 10px;
+  justify-content: flex-end;
+}
+
+/* Table css */
+
+.reports-container{
+  width: 66%;
+}
 .reports-table{
-  max-height: 60vh;
+  padding: 0 10px ;
+  max-height: 50vh;
   overflow: auto;
+}
+
+.reports-section-buttons{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.reports-switch{
+  width: auto;
+  padding: 8px;
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px #8b7f7f;
+}
+/* Total css */
+.reports-total {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.reports-table-header > th {
+  background-color: #e63946;
+  color: white;
+  font-weight: bold;
+}
+@media screen and (max-width: 768px) {
+  .reports-app {
+    display: flex;
+    flex-direction: column;
+  }
+  .reports-switch{
+    padding: 3px;
+    margin: 0px;
+    position: relative;
+    left: -105px;
+    top: -30px;
+  }
+  .reports-table {
+    position: relative;
+    top: -20px;
+  }
+  .reports-total{
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  .reports-form {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+  
+  .reports-container {
+    width: auto;
+  }
+
+  .reports-section-buttons{
+    display: flex;
+    justify-content: center;
+  }
 }
