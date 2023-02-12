@@ -13,6 +13,9 @@ import Button from '@mui/material/Button';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
+import TextField from '@mui/material/TextField';
+
+// Api
 import { apiCreateSales } from '../api/transactions';
 
 import { useSnackbar } from 'notistack';
@@ -26,7 +29,7 @@ const Sales = (props) => {
   const [showProducts, setShowProducts] = React.useState([])
   const [listOfSales, setListOfSales] = React.useState([])
   const [search, setSearch] = React.useState('')
-
+  const [otherPrice, setOtherPrice] = React.useState(0)
   const addItem = (item) => {
     let exist = false
     const newList = listOfSales.map(elem => {
@@ -38,6 +41,7 @@ const Sales = (props) => {
     })
     if (!exist) newList.push({ name: item.name, cant: 1, price: item.price })
     setListOfSales(newList)
+    setOtherPrice(0)
   }
 
   const removeItem = (itemName) => {
@@ -134,6 +138,12 @@ const Sales = (props) => {
             )
           })}
         </section>
+        <div className='d-flex justify-content-center'>
+          <div className='d-flex align-items-center mt-2'>
+            <TextField label='Precio' size='small' type={'number'} onChange={(e) => setOtherPrice(e.target.value)} value={otherPrice} />
+            <Button className='mx-2' variant='contained' size='small' onClick={() => addItem({ name: "Otro", cant: 1, price: otherPrice })}>Agregar</Button>
+          </div>
+        </div>
       </section>
 
       {listOfSales.length > 0 &&
@@ -169,8 +179,8 @@ const Sales = (props) => {
                 ))}
               </TableBody>
             </Table>
-
           </div>
+
           <section className='text-center my-2'>
             <p className='my-2'>
               <b>Total: $</b>
