@@ -24,7 +24,7 @@ const CreateModal = (props) => {
       name,
       price: parseFloat(price),
       stock: parseInt(stock),
-      code,
+      code: parseInt(code),
       business
     }
     let response;

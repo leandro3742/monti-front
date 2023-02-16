@@ -2,10 +2,11 @@
   height: 100px;
 }
 
-.sales-list{
+.sales-list {
   max-height: 60vh;
   overflow-y: auto;
 }
+
 .sales-table-header>th {
   background-color: #e63946;
   color: white;

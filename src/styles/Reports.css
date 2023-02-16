@@ -21,7 +21,7 @@
 }
 .reports-table{
   padding: 0 10px ;
-  max-height: 50vh;
+  max-height: 70vh;
   overflow: auto;
 }
 
@@ -55,6 +55,14 @@
   .reports-app {
     display: flex;
     flex-direction: column;
+  }
+  .reports-table {
+    padding: 0px;
+    max-height: 40vh;
+    overflow: auto;
+  }
+  .reports-table th{
+    padding: 7px 2px;
   }
   .reports-switch{
     padding: 3px;

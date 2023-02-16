@@ -31,6 +31,7 @@ const Sales = (props) => {
   const [search, setSearch] = React.useState('')
   const [otherPrice, setOtherPrice] = React.useState(0)
   const addItem = (item) => {
+    console.log(item)
     let exist = false
     const newList = listOfSales.map(elem => {
       if (elem.name === item.name) {
@@ -101,12 +102,24 @@ const Sales = (props) => {
     closeSpinner()
   }
 
+  const showIfCode = (e) => {
+    e.preventDefault()
+    let aux = +search
+    if (aux) {
+      let item = products.find(elem => elem.code == aux)
+      if (item) {
+        addItem(item)
+        setSearch('')
+      }
+      else enqueueSnackbar('No se encontró el producto', { variant: 'error' })
+    }
+  }
   return (
     <div className='row m-0'>
       <section className='col-12 col-lg-6 m-0'>
         <div className='sales-title'>
           <h1 className='text-center'>Lista de productos</h1>
-          <form onSubmit={(e) => e.preventDefault()} style={{ border: '1px solid white', width: '300px', height: '40px' }} className='d-flex justify-content-center m-auto rounded border border-2 mb-2' >
+          <form onSubmit={showIfCode} style={{ border: '1px solid white', width: '300px', height: '40px' }} className='d-flex justify-content-center m-auto rounded border border-2 mb-2' >
             <InputBase
               placeholder={`Buscar Producto`}
               inputProps={{ 'aria-label': 'Buscar cliente' }}
@@ -139,10 +152,10 @@ const Sales = (props) => {
           })}
         </section>
         <div className='d-flex justify-content-center'>
-          <div className='d-flex align-items-center mt-2'>
-            <TextField label='Precio' size='small' type={'number'} onChange={(e) => setOtherPrice(e.target.value)} value={otherPrice} />
-            <Button className='mx-2' variant='contained' size='small' onClick={() => addItem({ name: "Otro", cant: 1, price: otherPrice })}>Agregar</Button>
-          </div>
+          {/* <div className='d-flex align-items-center mt-2'> */}
+          <TextField fullWidth label='Precio' size='small' type={'number'} onChange={(e) => setOtherPrice(e.target.value)} value={otherPrice} />
+          <Button className='mx-2' variant='contained' size='small' onClick={() => addItem({ name: "Otro", cant: 1, price: otherPrice })}>Agregar</Button>
+          {/* </div> */}
         </div>
       </section>
 

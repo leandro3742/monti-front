@@ -53,12 +53,13 @@ const UpdateModal = (props) => {
         <Modal.Title>Editar</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {console.log(data)}
         {Object.keys(data).length > 0 &&
           <div className='d-flex flex-column align-items-center'>
             <TextField disabled={true} size='small' label='Nombre' value={name} onChange={(e) => setName(e.target.value)} />
             <TextField className='my-3' size='small' type='number' label='Precio' value={price} onChange={(e) => setPrice(e.target.value)} />
             <TextField size='small' type='number' label='Stock' value={stock} onChange={(e) => setStock(e.target.value)} />
-            <TextField className='my-3' size='small' label='Código de barra' value={code} onChange={(e) => setCode(e.target.value)} />
+            <TextField className='my-3' size='small' label='Código de barra' value={data.code ? data.code : ''} onChange={(e) => setCode(e.target.value)} />
           </div>
         }
       </Modal.Body>
