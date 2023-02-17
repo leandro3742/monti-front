@@ -28,6 +28,7 @@ const Reports = (props) => {
   const [data, setData] = React.useState([]);
   const [collapse, setCollapse] = React.useState(false)
   const [dataCollapse, setDataCollapse] = React.useState([])
+  const [byMonth, setByMonth] = React.useState(false)
 
   const handleChange = (event) => {
     console.log(event.target.name)
@@ -41,8 +42,8 @@ const Reports = (props) => {
   };
 
   const getTotal = (prop) => {
-    let subTotal = total
-    prop.map(elem => {
+    let subTotal = 0
+    prop.forEach(elem => {
       elem.type === 'pago' ? subTotal -= elem.value : subTotal += elem.value
     })
     setTotal(subTotal)
@@ -57,12 +58,28 @@ const Reports = (props) => {
     if (resp.status === 200) {
       resp = await resp.json()
       setData(resp.data.transactions)
+      setByMonth(false)
     }
     else if (resp.status === 404) {
       setData([])
     }
   }
 
+  const getDataMonth = async () => {
+    openSpinner()
+    let auxMonth = month
+    if (month + 1 < 10) auxMonth = '0' + (month + 1)
+    let resp = await fetch(`${import.meta.env.VITE_BACKEND}/business/getTransactionsByMonth/${business}/${auxMonth}/${year}`)
+    closeSpinner()
+    if (resp.status === 200) {
+      resp = await resp.json()
+      setData(resp.data.transactions)
+      setByMonth(true)
+    }
+    else if (resp.status === 404) {
+      setData([])
+    }
+  }
   useEffect(() => {
     getData()
   }, [])
@@ -84,7 +101,6 @@ const Reports = (props) => {
           aux[index].value += elem.value
         }
       })
-      console.log(aux)
       setDataCollapse(aux)
     }
   }, [collapse]);
@@ -129,7 +145,10 @@ const Reports = (props) => {
         />
         <div className='reports-form-button'>
           {day && month !== -1 && year &&
-            <Button size='small' variant='contained' onClick={getData}>Ver transacciones</Button>
+            <Button size='small' variant='contained' onClick={getData}>Ventas del día</Button>
+          }
+          {month !== -1 && year &&
+            <Button size='small' variant='contained' onClick={getDataMonth} className='mx-2'>Ventas de todo el mes</Button>
           }
         </div>
       </form>
@@ -173,6 +192,7 @@ const Reports = (props) => {
                 <TableHead>
                   <TableRow className='reports-table-header'>
                     <TableCell>Hora</TableCell>
+                    {byMonth && <TableCell>Fecha</TableCell>}
                     <TableCell align='center'>Producto</TableCell>
                     <TableCell align="right">Valor $</TableCell>
                   </TableRow>
@@ -185,6 +205,7 @@ const Reports = (props) => {
                       <TableCell component="th" scope="row">
                         {elem.hour}
                       </TableCell>
+                      {byMonth && <TableCell>{elem.day}</TableCell>}
                       <TableCell align="center">{elem.product}</TableCell>
                       <TableCell align="right">${elem.value}</TableCell>
                     </TableRow>

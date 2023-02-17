@@ -31,7 +31,6 @@ const Sales = (props) => {
   const [search, setSearch] = React.useState('')
   const [otherPrice, setOtherPrice] = React.useState(0)
   const addItem = (item) => {
-    console.log(item)
     let exist = false
     const newList = listOfSales.map(elem => {
       if (elem.name === item.name) {
